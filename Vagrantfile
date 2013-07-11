@@ -13,6 +13,20 @@ Vagrant.configure("2") do |config|
     vbox.customize ["modifyvm", :id, "--ioapic", "on"]
   end
 
+  # Database
+  config.vm.define :mysql do |mysql|
+    mysql.vm.hostname = "#{app_name}-mysql"
+    mysql.vm.network :private_network, ip: "192.168.10.1"
+
+    mysql.vm.provider :virtualbox do |vbox|
+      vbox.name = "#{mysql.vm.hostname}"
+    end
+
+    mysql.vm.provision "chef_solo" do |chef|
+      chef.add_recipe "mysql"
+    end
+  end
+
   # Proxy
   config.vm.define :proxy do |proxy|
     proxy.vm.hostname = "#{app_name}-haproxy"
