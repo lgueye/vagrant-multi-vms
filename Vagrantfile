@@ -1,4 +1,7 @@
 app_name="limber"
+app_servers = 2.times.map { |i| "#{app_name}-jetty-#{i}" }
+databases = "#{app_name}-mysql"
+proxies = "#{app_name}-haproxy"
 
 Vagrant.configure("2") do |config|
 
@@ -14,8 +17,8 @@ Vagrant.configure("2") do |config|
   end
 
   # Database
-  config.vm.define :mysql do |mysql|
-    mysql.vm.hostname = "#{app_name}-mysql"
+  config.vm.define databases do |mysql|
+    mysql.vm.hostname = databases
     mysql.vm.network :private_network, ip: "192.168.10.1"
 
     mysql.vm.provider :virtualbox do |vbox|
@@ -35,9 +38,39 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  # Jettys
+  app_servers.each_index do |index|
+    ip = "192.168.10.#{index + 10}"
+    current_server = app_servers[index]
+
+    config.vm.define current_server do |jetty|
+      jetty.vm.hostname = current_server
+      jetty.vm.network :private_network, ip: ip
+
+      jetty.vm.provider :virtualbox do |vbox|
+        vbox.name = "#{jetty.vm.hostname}"
+      end
+
+      jetty.vm.provision "chef_solo" do |chef|
+        chef.add_recipe "apt"
+        chef.json = {
+            "java" => {
+                "jdk_version" => 7,
+                "install_flavor" => "oracle",
+                "oracle" => {
+                    "accept_oracle_download_terms" => true
+                }
+            }
+        }
+        chef.add_recipe "java"
+        chef.add_recipe "jetty"
+      end
+    end
+  end
+
   # Proxy
-  config.vm.define :proxy do |proxy|
-    proxy.vm.hostname = "#{app_name}-haproxy"
+  config.vm.define proxies do |proxy|
+    proxy.vm.hostname = proxies
     proxy.vm.network :private_network, ip: "192.168.10.5"
 
     proxy.vm.provider :virtualbox do |vbox|
