@@ -1,7 +1,4 @@
 app_name="limber"
-app_servers = 2.times.map { |i| "#{app_name}-jetty-#{i}" }
-databases = "#{app_name}-mysql"
-proxies = "#{app_name}-haproxy"
 
 Vagrant.configure("2") do |config|
 
@@ -20,6 +17,7 @@ Vagrant.configure("2") do |config|
   end
 
   # Database
+  databases = "#{app_name}-mysql"
   config.vm.define databases do |mysql|
     mysql.vm.hostname = databases
     mysql.vm.network :private_network, ip: "192.168.10.1"
@@ -41,13 +39,25 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  # Jettys
+  # App servers
+  app_servers = []
+  2.times.map { |i|
+    app_servers.push({
+                         "hostname"        => "#{app_name}-jetty-#{i}",
+                         "ipaddress"       => "192.168.10.#{ i + 10}",
+                         "port"            => "8080",
+                         "proxy_weight"    => 1,
+                         "max_connections" => 100,
+                         "ssl_port"        => 443
+                     })
+
+  }
+
   app_servers.each_index do |index|
-    ip = "192.168.10.#{index + 10}"
-    current_server = app_servers[index]
+    current_server = app_servers[index]['hostname']
     config.vm.define current_server do |jetty|
       jetty.vm.hostname = current_server
-      jetty.vm.network :private_network, ip: ip
+      jetty.vm.network :private_network, ip: app_servers[index]['ipaddress']
 
       jetty.vm.provider :virtualbox do |vbox|
         vbox.name = "#{jetty.vm.hostname}"
@@ -55,9 +65,6 @@ Vagrant.configure("2") do |config|
 
       jetty.vm.provision "chef_solo" do |chef|
         chef.add_recipe "apt"
-        chef.roles_path = "roles"
-        chef.data_bags_path = "data_bags"
-        chef.add_role("appserver")
         chef.json = {
             "java" => {
                 "jdk_version" => 7,
@@ -74,6 +81,7 @@ Vagrant.configure("2") do |config|
   end
 
   # Proxy
+  proxies = "#{app_name}-haproxy"
   config.vm.define proxies do |proxy|
     proxy.vm.hostname = proxies
     proxy.vm.network :private_network, ip: "192.168.10.5"
@@ -84,12 +92,9 @@ Vagrant.configure("2") do |config|
 
     proxy.vm.provision "chef_solo" do |chef|
       chef.add_recipe "apt"
-      chef.roles_path = "roles"
-      chef.data_bags_path = "data_bags"
       chef.json = {
           "haproxy" => {
-              "app_server_role" => "appserver",
-              "member_port" => 8080
+              "backend_servers" => app_servers
           }
       }
       chef.add_recipe "haproxy::app_lb"
