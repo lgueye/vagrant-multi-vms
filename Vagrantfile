@@ -9,11 +9,14 @@ Vagrant.configure("2") do |config|
   config.vm.box_url = "http://goo.gl/wxdwM"
   config.omnibus.chef_version = :latest
   config.berkshelf.enabled = true
+  config.landrush.enable
 
   config.vm.provider :virtualbox do |vbox|
     vbox.customize ["modifyvm", :id, "--memory", "512"]
     vbox.customize ["modifyvm", :id, "--cpus", "2"]
     vbox.customize ["modifyvm", :id, "--ioapic", "on"]
+    vbox.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    vbox.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
   end
 
   # Database
@@ -42,7 +45,6 @@ Vagrant.configure("2") do |config|
   app_servers.each_index do |index|
     ip = "192.168.10.#{index + 10}"
     current_server = app_servers[index]
-
     config.vm.define current_server do |jetty|
       jetty.vm.hostname = current_server
       jetty.vm.network :private_network, ip: ip
@@ -53,6 +55,9 @@ Vagrant.configure("2") do |config|
 
       jetty.vm.provision "chef_solo" do |chef|
         chef.add_recipe "apt"
+        chef.roles_path = "roles"
+        chef.data_bags_path = "data_bags"
+        chef.add_role("appserver")
         chef.json = {
             "java" => {
                 "jdk_version" => 7,
@@ -79,7 +84,15 @@ Vagrant.configure("2") do |config|
 
     proxy.vm.provision "chef_solo" do |chef|
       chef.add_recipe "apt"
-      chef.add_recipe "haproxy"
+      chef.roles_path = "roles"
+      chef.data_bags_path = "data_bags"
+      chef.json = {
+          "haproxy" => {
+              "app_server_role" => "appserver",
+              "member_port" => 8080
+          }
+      }
+      chef.add_recipe "haproxy::app_lb"
     end
   end
 
