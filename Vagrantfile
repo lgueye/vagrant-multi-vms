@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
   config.vm.box_url = "http://goo.gl/wxdwM"
   config.omnibus.chef_version = :latest
   config.berkshelf.enabled = true
-  config.landrush.enable
+  config.vm.provision :hosts
 
   config.vm.provider :virtualbox do |vbox|
     vbox.customize ["modifyvm", :id, "--memory", "512"]
@@ -42,15 +42,16 @@ Vagrant.configure("2") do |config|
   # App servers
   app_servers = []
   2.times.map { |i|
-    app_servers.push({
-                         "hostname"        => "#{app_name}-jetty-#{i}",
-                         "ipaddress"       => "192.168.10.#{ i + 10}",
-                         "port"            => "8080",
-                         "proxy_weight"    => 1,
-                         "max_connections" => 100,
-                         "ssl_port"        => 443
-                     })
-
+    app_servers.push(
+        {
+            "hostname" => "#{app_name}-jetty-#{i}",
+            "ipaddress" => "192.168.10.#{ i + 10}",
+            "port" => "8080",
+            "proxy_weight" => 1,
+            "max_connections" => 100,
+            "ssl_port" => 443
+        }
+    )
   }
 
   app_servers.each_index do |index|
