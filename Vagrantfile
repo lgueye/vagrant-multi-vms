@@ -11,6 +11,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "chef_solo" do |chef|
     chef.add_recipe "apt"
     chef.add_recipe "curl"
+    chef.cookbooks_path = ["cookbooks","site-cookbooks"]
   end
 
   config.vm.provider :virtualbox do |vbox|
@@ -32,14 +33,20 @@ Vagrant.configure("2") do |config|
     end
 
     mysql.vm.provision "chef_solo" do |chef|
+      chef.cookbooks_path = ["cookbooks","site-cookbooks"]
       chef.json = {
           "mysql" => {
-              "server_root_password" => "*mysql-limber@0",
-              "server_debian_password" => "*mysql-limber@0",
-              "server_repl_password" => "*mysql-limber@0"
+              "server_root_password" => "*mysql-root@0",
+              "server_debian_password" => "*mysql-root@0",
+              "server_repl_password" => "*mysql-root@0"
+          },
+          "app" => {
+              "db_schema" => app_name,
+              "db_user" => app_name,
+              "db_password" => "*mysql-limber@0"
           }
       }
-      chef.add_recipe "mysql::server"
+      chef.add_recipe "#{app_name}::data"
     end
   end
 
@@ -80,6 +87,7 @@ Vagrant.configure("2") do |config|
         }
         chef.add_recipe "java"
         chef.add_recipe "jetty"
+        #chef.add_recipe "#{app_name}::appservers"
       end
     end
   end
