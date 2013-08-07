@@ -8,6 +8,11 @@ Vagrant.configure("2") do |config|
   config.berkshelf.enabled = true
   config.vm.provision :hosts
 
+  config.vm.provision "chef_solo" do |chef|
+    chef.add_recipe "apt"
+    chef.add_recipe "curl"
+  end
+
   config.vm.provider :virtualbox do |vbox|
     vbox.customize ["modifyvm", :id, "--memory", "512"]
     vbox.customize ["modifyvm", :id, "--cpus", "2"]
@@ -27,7 +32,6 @@ Vagrant.configure("2") do |config|
     end
 
     mysql.vm.provision "chef_solo" do |chef|
-      chef.add_recipe "apt"
       chef.json = {
           "mysql" => {
               "server_root_password" => "*mysql-limber@0",
@@ -65,7 +69,6 @@ Vagrant.configure("2") do |config|
       end
 
       jetty.vm.provision "chef_solo" do |chef|
-        chef.add_recipe "apt"
         chef.json = {
             "java" => {
                 "jdk_version" => 7,
@@ -92,7 +95,6 @@ Vagrant.configure("2") do |config|
     end
 
     proxy.vm.provision "chef_solo" do |chef|
-      chef.add_recipe "apt"
       chef.json = {
           "haproxy" => {
               "backend_servers" => app_servers
