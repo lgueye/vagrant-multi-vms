@@ -6,6 +6,7 @@ Vagrant.configure("2") do |config|
   config.vm.box_url = "http://goo.gl/wxdwM"
   config.omnibus.chef_version = :latest
   config.berkshelf.enabled = true
+  #config.landrush.enable
   config.vm.provision :hosts
 
   config.vm.provision "chef_solo" do |chef|
