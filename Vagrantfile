@@ -26,7 +26,7 @@ Vagrant.configure("2") do |config|
   databases = "#{app_name}-mysql"
   config.vm.define databases do |mysql|
     mysql.vm.hostname = databases
-    mysql.vm.network :private_network, ip: "192.168.10.1"
+    mysql.vm.network :private_network, ip: "192.168.10.2"
 
     mysql.vm.provider :virtualbox do |vbox|
       vbox.name = "#{mysql.vm.hostname}"
@@ -45,7 +45,6 @@ Vagrant.configure("2") do |config|
               "db_password" => "*mysql-limber@0"
           }
       }
-      #chef.add_recipe "mysql55::server"
       chef.add_recipe "#{app_name}::data"
     end
   end
