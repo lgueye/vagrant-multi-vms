@@ -33,7 +33,6 @@ Vagrant.configure("2") do |config|
     end
 
     mysql.vm.provision "chef_solo" do |chef|
-      chef.cookbooks_path = ["cookbooks","site-cookbooks"]
       chef.json = {
           "mysql" => {
               "server_root_password" => "*mysql-root@0",
@@ -46,6 +45,7 @@ Vagrant.configure("2") do |config|
               "db_password" => "*mysql-limber@0"
           }
       }
+      #chef.add_recipe "mysql55::server"
       chef.add_recipe "#{app_name}::data"
     end
   end
