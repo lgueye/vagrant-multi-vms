@@ -87,7 +87,7 @@ Vagrant.configure("2") do |config|
         }
         chef.add_recipe "java"
         chef.add_recipe "jetty"
-        #chef.add_recipe "#{app_name}::appservers"
+        chef.add_recipe "#{app_name}::appservers"
       end
     end
   end
