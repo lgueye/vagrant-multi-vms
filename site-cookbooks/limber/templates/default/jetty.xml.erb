@@ -178,7 +178,7 @@
     <!-- JDBC Resources                                              -->
     <!-- =========================================================== -->
     <!-- Account Datasource -->
-    <New id="<%= node['app']['datasource']['name'] %>-datasource" class="org.mortbay.jetty.plus.naming.Resource">
+    <New id="<%= node['app']['name'] %>-datasource" class="org.mortbay.jetty.plus.naming.Resource">
         <Arg></Arg>
         <Arg><%= node['app']['datasource']['name'] %></Arg>
         <Arg>
