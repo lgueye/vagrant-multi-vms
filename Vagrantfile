@@ -64,8 +64,6 @@ Vagrant.configure("2") do |config|
       end
 
       jetty.vm.provision 'chef_solo' do |chef|
-        #chef.add_recipe 'java'
-        #chef.add_recipe 'jetty'
         chef.add_recipe "#{app_name}::appservers"
       end
     end
@@ -82,7 +80,22 @@ Vagrant.configure("2") do |config|
     end
 
     proxy.vm.provision 'chef_solo' do |chef|
-      chef.add_recipe 'haproxy::app_lb'
+      chef.add_recipe "#{app_name}::proxy"
+    end
+  end
+
+  # Search engine
+  elasticsearch = "#{app_name}-elasticsearch"
+  config.vm.define elasticsearch do |es|
+    es.vm.hostname = elasticsearch
+    es.vm.network :private_network, ip: '192.168.10.6'
+
+    es.vm.provider :virtualbox do |vbox|
+      vbox.name = "#{es.vm.hostname}"
+    end
+
+    es.vm.provision 'chef_solo' do |chef|
+      chef.add_recipe "#{app_name}::search"
     end
   end
 
