@@ -1,7 +1,7 @@
-include_recipe "mysql55::server"
-include_recipe "database::mysql"
+include_recipe 'mysql55::server'
+include_recipe 'database::mysql'
 
-mysql_connection = {:host => "localhost", :username => 'root',
+mysql_connection = {:host => 'localhost', :username => 'root',
                     :password => node['mysql']['server_root_password']}
 
 mysql_database node['app']['db']['schema'] do

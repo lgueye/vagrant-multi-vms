@@ -1,7 +1,7 @@
-include_attribute "java"
-include_attribute "jetty"
-include_attribute "limber::default"
-include_attribute "limber::data"
+include_attribute 'java'
+include_attribute 'jetty'
+include_attribute 'limber::default'
+include_attribute 'limber::data'
 
 node.set['java']['jdk_version'] = 7
 node.set['java']['install_flavor'] = 'oracle'
