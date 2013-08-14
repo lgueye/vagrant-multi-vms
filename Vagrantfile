@@ -81,6 +81,7 @@ Vagrant.configure("2") do |config|
 
     proxy.vm.provision 'chef_solo' do |chef|
       chef.add_recipe "#{app_name}::proxy"
+      chef.add_recipe 'minitest-handler'
     end
   end
 
