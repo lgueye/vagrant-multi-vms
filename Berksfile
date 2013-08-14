@@ -1,9 +1,13 @@
-cookbook "apt", :git => "https://github.com/opscode-cookbooks/apt.git"
-cookbook "curl", :git => "https://github.com/retr0h/cookbook-curl.git"
-cookbook "java", :git => "https://github.com/opscode-cookbooks/java.git"
-cookbook "jetty", :git => "https://github.com/opscode-cookbooks/jetty.git"
-cookbook "haproxy", :git => "https://github.com/coroutine/chef-haproxy.git"
-cookbook "mysql55", :git => "https://github.com/lxmx-cookbooks/mysql55.git"
-cookbook "database", :git => "https://github.com/opscode-cookbooks/database.git"
-cookbook "elasticsearch", :git => "https://github.com/elasticsearch/cookbook-elasticsearch.git"
-cookbook "limber", :path => "./site-cookbooks/limber"
+site :opscode
+cookbook 'apt'
+cookbook 'java'
+cookbook 'jetty'
+cookbook 'database'
+
+cookbook 'minitest-handler', :git => 'https://github.com/btm/minitest-handler-cookbook.git'
+cookbook 'curl', :git => 'https://github.com/retr0h/cookbook-curl.git'
+cookbook 'haproxy', :git => 'https://github.com/coroutine/chef-haproxy.git'
+cookbook 'mysql55', :git => 'https://github.com/lxmx-cookbooks/mysql55.git'
+cookbook 'elasticsearch', :git => 'https://github.com/elasticsearch/cookbook-elasticsearch.git'
+
+cookbook 'limber', :path => './site-cookbooks/limber'
