@@ -10,8 +10,6 @@ Vagrant.configure("2") do |config|
   config.vm.provision :hosts
 
   config.vm.provision 'chef_solo' do |chef|
-    chef.add_recipe 'apt'
-    chef.add_recipe 'curl'
     chef.cookbooks_path = %w('cookbooks','site-cookbooks')
   end
 
@@ -81,7 +79,6 @@ Vagrant.configure("2") do |config|
 
     proxy.vm.provision 'chef_solo' do |chef|
       chef.add_recipe "#{app_name}::proxy"
-      chef.add_recipe 'minitest-handler'
     end
   end
 

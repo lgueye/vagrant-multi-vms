@@ -1,3 +1,4 @@
+include_recipe 'limber::default'
 include_recipe 'java'
 include_recipe 'jetty'
 
@@ -43,3 +44,4 @@ template '/etc/jetty/jetty.xml' do
   notifies :restart, 'service[jetty]', :immediately
 end
 
+include_recipe 'minitest-handler'

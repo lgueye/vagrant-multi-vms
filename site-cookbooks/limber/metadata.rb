@@ -11,7 +11,6 @@ recipe 'limber::default', 'Configures limber app'
 depends "java"
 depends "jetty"
 depends "mysql55"
-depends "mysql"
 depends "database"
 depends "haproxy"
 depends "elasticsearch"

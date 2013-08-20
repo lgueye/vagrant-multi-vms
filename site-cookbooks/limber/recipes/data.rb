@@ -1,3 +1,4 @@
+include_recipe 'limber::default'
 include_recipe 'mysql55::server'
 include_recipe 'database::mysql'
 
@@ -17,3 +18,5 @@ mysql_database_user node['app']['db']['user'] do
   privileges [:select, :update, :insert, :delete]
   action [:create, :grant]
 end
+
+include_recipe 'minitest-handler'

@@ -9,7 +9,7 @@ describe_recipe 'limber::proxy' do
     file(haproxy_config_file).must_be_modified_after(run_status.start_time)
   end
 
-  it 'should include app servers settings' do
+  it 'haproxy config file should include members' do
     file(haproxy_config_file).must_include 'limber-jetty-0'
     file(haproxy_config_file).must_include 'limber-jetty-1'
   end

@@ -1,3 +1,4 @@
+include_recipe 'limber::default'
 include_recipe 'java'
 
 bash 'fix elasticsearch outdated jdk seeking algorithm' do
@@ -19,3 +20,6 @@ template '/etc/elasticsearch/elasticsearch.yml' do
   owner 'root'
   group 'root'
 end
+
+include_recipe 'minitest-handler'
+
