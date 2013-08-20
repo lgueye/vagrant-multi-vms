@@ -1,7 +1,7 @@
 include_attribute 'elasticsearch::default'
 include_attribute 'limber::default'
 
-node.set['java']['jdk_version'] = 7
+node.set['java']['jdk_version'] = '7'
 node.set['java']['install_flavor'] = 'oracle'
 node.set['java']['oracle']['accept_oracle_download_terms'] = true
 
