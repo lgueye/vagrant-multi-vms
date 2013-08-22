@@ -10,7 +10,7 @@ describe_recipe 'limber::proxy' do
   end
 
   it 'haproxy config file should include members' do
-    file(haproxy_config_file).must_include 'limber-jetty-0'
-    file(haproxy_config_file).must_include 'limber-jetty-1'
+    file(haproxy_config_file).must_include 'limber-appserver-0'
+    file(haproxy_config_file).must_include 'limber-appserver-1'
   end
 end
