@@ -1,7 +1,6 @@
 include_attribute 'java'
 include_attribute 'jetty'
 include_attribute 'limber::default'
-include_attribute 'limber::data'
 
 node.set['java']['jdk_version'] = '7'
 node.set['java']['install_flavor'] = 'oracle'
@@ -20,5 +19,6 @@ node.set['app']['appservers'] = []
       }
   )
 }
+node.set['app']['datasource']['name'] = 'jdbc/limber'
 
 node.set['haproxy']['backend_servers'] = node['app']['appservers']
