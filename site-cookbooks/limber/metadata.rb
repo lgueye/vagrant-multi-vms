@@ -8,11 +8,14 @@ version          '0.1.0'
 
 recipe 'limber::default', 'Configures limber app'
 
-depends "java"
-depends "jetty"
-depends "mysql55"
-depends "database"
-depends "haproxy"
-depends "elasticsearch"
+depends 'apt'
+depends 'curl'
+depends 'java'
+depends 'jetty'
+depends 'mysql55'
+depends 'database'
+depends 'haproxy'
+depends 'elasticsearch'
+depends 'minitest-handler'
 
 
